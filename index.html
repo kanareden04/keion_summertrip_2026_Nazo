@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3つのキーワード入力</title>
+    <title>キーワード入力</title>
     <style>
-        /* 全体のスタイル（モノクローム・目に優しいダークトーン） */
+        /* 全体のスタイル（モノクロームベース） */
         body {
             background-color: #1a1a1a;
             color: #e0e0e0;
@@ -15,24 +15,26 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 16px; /* スマホ時の余白確保 */
             box-sizing: border-box;
         }
 
-        /* メインのコンテナ */
+        /* メインのコンテナ（レスポンシブ対応） */
         .container {
             background-color: #2b2b2b;
-            padding: 40px;
+            padding: 32px 24px;
             border-radius: 12px;
             border: 2px solid #444;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 100%;
-            max-width: 450px;
+            max-width: 420px; /* PCでの最大幅 */
+            box-sizing: border-box;
         }
 
         h1 {
-            font-size: 20px;
+            font-size: 18px;
+            margin-top: 0;
             margin-bottom: 24px;
             font-weight: normal;
             letter-spacing: 1px;
@@ -40,19 +42,24 @@
 
         /* 入力エリアのグループ */
         .input-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             text-align: left;
         }
 
         .input-group label {
             display: block;
             font-size: 13px;
-            color: #aaa;
             margin-bottom: 6px;
-            margin-left: 2px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
 
-        /* 入力フィールド */
+        /* 色別のラベルカラー */
+        .label-blue { color: #4a90e2; }
+        .label-yellow { color: #f5a623; }
+        .label-red { color: #e74c3c; }
+
+        /* 入力フィールド共通 */
         input[type="text"] {
             width: 100%;
             padding: 12px 14px;
@@ -62,12 +69,30 @@
             color: #fff;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
             box-sizing: border-box;
         }
 
-        input[type="text"]:focus {
-            border-color: #999;
+        /* 差し色アクセント（各色の左枠線とフォーカス時の色） */
+        input#keywordBlue {
+            border-left: 6px solid #4a90e2;
+        }
+        input#keywordBlue:focus {
+            border-color: #4a90e2;
+        }
+
+        input#keywordYellow {
+            border-left: 6px solid #f5a623;
+        }
+        input#keywordYellow:focus {
+            border-color: #f5a623;
+        }
+
+        input#keywordRed {
+            border-left: 6px solid #e74c3c;
+        }
+        input#keywordRed:focus {
+            border-color: #e74c3c;
         }
 
         /* 送信ボタン */
@@ -75,13 +100,14 @@
             background: linear-gradient(to bottom, #555, #444);
             color: #fff;
             border: 2px solid #666;
-            padding: 12px 32px;
+            padding: 14px 32px;
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 12px;
+            margin-top: 10px;
             width: 100%;
             transition: background 0.3s, border-color 0.3s;
+            box-sizing: border-box;
         }
 
         button:hover {
@@ -97,44 +123,60 @@
             color: #ffffff;
             border-radius: 6px;
             font-weight: bold;
+            font-size: 14px;
             display: none;
         }
 
-        /* 動画コンテナ */
+        /* 動画コンテナ（レスポンシブな16:9比率を維持） */
         .video-container {
-            margin-top: 24px;
+            margin-top: 20px;
             display: none;
             border-radius: 8px;
             overflow: hidden;
             border: 2px solid #444;
+            position: relative;
+            padding-top: 56.25%; /* 16:9のアスペクト比 */
+            height: 0;
         }
 
-        iframe {
-            display: block;
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 250px;
+            height: 100%;
             border: none;
+        }
+
+        /* スマホ向け微調整 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px 16px;
+            }
+            h1 {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>3つのキーワードを入力</h1>
+        <h1>キーワードを入力してください</h1>
         
         <div class="input-group">
-            <label for="keyword1">キーワード 1</label>
-            <input type="text" id="keyword1" placeholder="一つ目の言葉" autocomplete="off">
+            <label for="keywordBlue" class="label-blue">青のキーワード</label>
+            <input type="text" id="keywordBlue" placeholder="青の言葉を入力" autocomplete="off">
         </div>
 
         <div class="input-group">
-            <label for="keyword2">キーワード 2</label>
-            <input type="text" id="keyword2" placeholder="二つ目の言葉" autocomplete="off">
+            <label for="keywordYellow" class="label-yellow">黄のキーワード</label>
+            <input type="text" id="keywordYellow" placeholder="黄の言葉を入力" autocomplete="off">
         </div>
 
         <div class="input-group">
-            <label for="keyword3">キーワード 3</label>
-            <input type="text" id="keyword3" placeholder="三つ目の言葉" autocomplete="off">
+            <label for="keywordRed" class="label-red">赤のキーワード</label>
+            <input type="text" id="keywordRed" placeholder="赤の言葉を入力" autocomplete="off">
         </div>
 
         <button onclick="checkKeywords()">送信</button>
@@ -148,10 +190,10 @@
 
     <script>
         function checkKeywords() {
-            // 3つの入力値を取得（余計な空白を除去）
-            const k1 = document.getElementById('keyword1').value.trim();
-            const k2 = document.getElementById('keyword2').value.trim();
-            const k3 = document.getElementById('keyword3').value.trim();
+            // 入力値の取得
+            const kBlue = document.getElementById('keywordBlue').value.trim();
+            const kYellow = document.getElementById('keywordYellow').value.trim();
+            const kRed = document.getElementById('keywordRed').value.trim();
 
             const errorMessage = document.getElementById('errorMessage');
             const videoContainer = document.getElementById('videoContainer');
@@ -163,38 +205,38 @@
             videoPlayer.src = "";
 
             // ====== 設定部分 ======
-            // 各入力欄の正解を設定
-            const correct1 = "りんご";
-            const correct2 = "みかん";
-            const correct3 = "ぶどう";
+            // 各色の正解ワードを設定
+            const correctBlue = "あお";
+            const correctYellow = "きいろ";
+            const correctRed = "あか";
 
-            // ブラフの判定用ワード（どの入力欄に打たれても反応させたい場合）
+            // ブラフ判定用のワード
             const bluffWords = ["ダミー", "トラップ", "ひっかけ"];
 
-            // 遷移先のページ名やURL
+            // 遷移先のURL
             const nextUrl = "quiz_page.html";
 
             // ブラフ動画の埋め込みURL
-            const bluffVideoUrl = "https://www.youtube.com/embed/mGduopN1dSI";
+            const bluffVideoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
             // ======================
 
-            // 入力されたワードの中にブラフが含まれているか確認
-            const containsBluff = bluffWords.includes(k1) || bluffWords.includes(k2) || bluffWords.includes(k3);
+            // いずれかの欄にブラフが含まれているか確認
+            const containsBluff = bluffWords.includes(kBlue) || bluffWords.includes(kYellow) || bluffWords.includes(kRed);
 
-            // すべて正解しているか確認
-            const isAllCorrect = (k1 === correct1) && (k2 === correct2) && (k3 === correct3);
+            // 3つとも正解か確認
+            const isAllCorrect = (kBlue === correctBlue) && (kYellow === correctYellow) && (kRed === correctRed);
 
             if (isAllCorrect) {
-                // 1. 3つとも正解の場合：指定したページへ移動
+                // 正解：ページ移動
                 window.location.href = nextUrl;
 
             } else if (containsBluff) {
-                // 2. 1つでもブラフ用ワードが含まれている場合：動画を再生
+                // ブラフ：動画再生
                 videoPlayer.src = bluffVideoUrl;
                 videoContainer.style.display = 'block';
 
             } else {
-                // 3. それ以外（間違っている場合）：警告メッセージを表示
+                // 不正解：警告表示
                 errorMessage.textContent = "キーワードが正しくありません。";
                 errorMessage.style.display = 'block';
             }
