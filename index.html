@@ -15,11 +15,11 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 16px; /* スマホ時の余白確保 */
+            padding: 16px;
             box-sizing: border-box;
         }
 
-        /* メインのコンテナ（レスポンシブ対応） */
+        /* メインのコンテナ */
         .container {
             background-color: #2b2b2b;
             padding: 32px 24px;
@@ -28,7 +28,7 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 100%;
-            max-width: 420px; /* PCでの最大幅 */
+            max-width: 420px;
             box-sizing: border-box;
         }
 
@@ -40,7 +40,6 @@
             letter-spacing: 1px;
         }
 
-        /* 入力エリアのグループ */
         .input-group {
             margin-bottom: 18px;
             text-align: left;
@@ -54,12 +53,10 @@
             letter-spacing: 0.5px;
         }
 
-        /* 色別のラベルカラー */
         .label-blue { color: #4a90e2; }
         .label-yellow { color: #f5a623; }
         .label-red { color: #e74c3c; }
 
-        /* 入力フィールド共通 */
         input[type="text"] {
             width: 100%;
             padding: 12px 14px;
@@ -73,29 +70,15 @@
             box-sizing: border-box;
         }
 
-        /* 差し色アクセント（各色の左枠線とフォーカス時の色） */
-        input#keywordBlue {
-            border-left: 6px solid #4a90e2;
-        }
-        input#keywordBlue:focus {
-            border-color: #4a90e2;
-        }
+        input#keywordBlue { border-left: 6px solid #4a90e2; }
+        input#keywordBlue:focus { border-color: #4a90e2; }
 
-        input#keywordYellow {
-            border-left: 6px solid #f5a623;
-        }
-        input#keywordYellow:focus {
-            border-color: #f5a623;
-        }
+        input#keywordYellow { border-left: 6px solid #f5a623; }
+        input#keywordYellow:focus { border-color: #f5a623; }
 
-        input#keywordRed {
-            border-left: 6px solid #e74c3c;
-        }
-        input#keywordRed:focus {
-            border-color: #e74c3c;
-        }
+        input#keywordRed { border-left: 6px solid #e74c3c; }
+        input#keywordRed:focus { border-color: #e74c3c; }
 
-        /* 送信ボタン */
         button {
             background: linear-gradient(to bottom, #555, #444);
             color: #fff;
@@ -115,7 +98,6 @@
             border-color: #888;
         }
 
-        /* 警告メッセージ */
         .error-message {
             margin-top: 20px;
             padding: 12px;
@@ -127,7 +109,6 @@
             display: none;
         }
 
-        /* 動画コンテナ（レスポンシブな16:9比率を維持） */
         .video-container {
             margin-top: 20px;
             display: none;
@@ -135,7 +116,7 @@
             overflow: hidden;
             border: 2px solid #444;
             position: relative;
-            padding-top: 56.25%; /* 16:9のアスペクト比 */
+            padding-top: 56.25%;
             height: 0;
         }
 
@@ -148,14 +129,9 @@
             border: none;
         }
 
-        /* スマホ向け微調整 */
         @media (max-width: 480px) {
-            .container {
-                padding: 24px 16px;
-            }
-            h1 {
-                font-size: 16px;
-            }
+            .container { padding: 24px 16px; }
+            h1 { font-size: 16px; }
         }
     </style>
 </head>
@@ -190,10 +166,10 @@
 
     <script>
         function checkKeywords() {
-            // 入力値の取得
-            const kBlue = document.getElementById('keywordBlue').value.trim();
-            const kYellow = document.getElementById('keywordYellow').value.trim();
-            const kRed = document.getElementById('keywordRed').value.trim();
+            // 空白を判定に含めるため .trim() は外してそのまま取得
+            const kBlue = document.getElementById('keywordBlue').value;
+            const kYellow = document.getElementById('keywordYellow').value;
+            const kRed = document.getElementById('keywordRed').value;
 
             const errorMessage = document.getElementById('errorMessage');
             const videoContainer = document.getElementById('videoContainer');
@@ -205,26 +181,31 @@
             videoPlayer.src = "";
 
             // ====== 設定部分 ======
-            // 各色の正解ワードを設定
-            const correctBlue = "あお";
-            const correctYellow = "きいろ";
-            const correctRed = "あか";
+            // 正解候補を配列で複数設定（ここに記載されているものはいずれも正解扱いになります）
+            const correctBlue = ["あお そら", "あお そら", "あおそら"];    // 全角空白 / 半角空白 / 空白なし
+            const correctYellow = ["きいろ とり", "きいろ とり", "きいろとり"];
+            const correctRed = ["あか はな", "あか はな", "あかはな"];
 
-            // ブラフ判定用のワード
-            const bluffWords = ["ダミー", "トラップ", "ひっかけ"];
+            // ブラフ候補（空白入りのパターンも登録可能）
+            const bluffWords = ["ダミー", "トラップ", "ひっかけ", "だみー ワード"];
 
             // 遷移先のURL
             const nextUrl = "quiz_page.html";
 
             // ブラフ動画の埋め込みURL
-            const bluffVideoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
+            const bluffVideoUrl = "https://www.youtube.com/embed/mGduopN1dSI";
             // ======================
 
-            // いずれかの欄にブラフが含まれているか確認
-            const containsBluff = bluffWords.includes(kBlue) || bluffWords.includes(kYellow) || bluffWords.includes(kRed);
+            // 入力された文字が正解候補のいずれかに一致するか確認 (.includes を使用)
+            const isBlueCorrect = correctBlue.includes(kBlue);
+            const isYellowCorrect = correctYellow.includes(kYellow);
+            const isRedCorrect = correctRed.includes(kRed);
 
-            // 3つとも正解か確認
-            const isAllCorrect = (kBlue === correctBlue) && (kYellow === correctYellow) && (kRed === correctRed);
+            // 3つとも正解リストに含まれているか
+            const isAllCorrect = isBlueCorrect && isYellowCorrect && isRedCorrect;
+
+            // いずれかの欄にブラフワードが含まれているか
+            const containsBluff = bluffWords.includes(kBlue) || bluffWords.includes(kYellow) || bluffWords.includes(kRed);
 
             if (isAllCorrect) {
                 // 正解：ページ移動
