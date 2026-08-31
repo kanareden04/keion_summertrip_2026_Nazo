@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>キーワード入力</title>
+    <title>3つのキーワード入力</title>
     <style>
         /* 全体のスタイル（モノクローム・目に優しいダークトーン） */
         body {
@@ -13,16 +13,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         /* メインのコンテナ */
         .container {
             background-color: #2b2b2b;
             padding: 40px;
-            border-radius: 12px; /* 少し丸みを帯びた角 */
-            border: 2px solid #444; /* やや太めの枠線 */
+            border-radius: 12px;
+            border: 2px solid #444;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 100%;
@@ -36,11 +38,24 @@
             letter-spacing: 1px;
         }
 
+        /* 入力エリアのグループ */
+        .input-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 6px;
+            margin-left: 2px;
+        }
+
         /* 入力フィールド */
         input[type="text"] {
-            width: calc(100% - 32px);
-            padding: 14px;
-            margin-bottom: 20px;
+            width: 100%;
+            padding: 12px 14px;
             border: 2px solid #555;
             border-radius: 8px;
             background-color: #333;
@@ -55,7 +70,7 @@
             border-color: #999;
         }
 
-        /* ボタン（上下でわずかにグラデーションをつけ、立体感を演出） */
+        /* 送信ボタン */
         button {
             background: linear-gradient(to bottom, #555, #444);
             color: #fff;
@@ -64,6 +79,8 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
+            margin-top: 12px;
+            width: 100%;
             transition: background 0.3s, border-color 0.3s;
         }
 
@@ -72,21 +89,21 @@
             border-color: #888;
         }
 
-        /* 警告メッセージ（赤などは使わず、グレー背景と白文字で表現） */
+        /* 警告メッセージ */
         .error-message {
             margin-top: 20px;
-            padding: 10px;
+            padding: 12px;
             background-color: #4a4a4a;
             color: #ffffff;
             border-radius: 6px;
             font-weight: bold;
-            display: none; /* 初期状態は非表示 */
+            display: none;
         }
 
         /* 動画コンテナ */
         .video-container {
             margin-top: 24px;
-            display: none; /* 初期状態は非表示 */
+            display: none;
             border-radius: 8px;
             overflow: hidden;
             border: 2px solid #444;
@@ -103,11 +120,24 @@
 <body>
 
     <div class="container">
-        <h1>キーワードを入力してください</h1>
+        <h1>3つのキーワードを入力</h1>
         
-        <input type="text" id="keywordInput" placeholder="キーワード" autocomplete="off">
-        <br>
-        <button onclick="checkKeyword()">送信</button>
+        <div class="input-group">
+            <label for="keyword1">キーワード 1</label>
+            <input type="text" id="keyword1" placeholder="一つ目の言葉" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <label for="keyword2">キーワード 2</label>
+            <input type="text" id="keyword2" placeholder="二つ目の言葉" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <label for="keyword3">キーワード 3</label>
+            <input type="text" id="keyword3" placeholder="三つ目の言葉" autocomplete="off">
+        </div>
+
+        <button onclick="checkKeywords()">送信</button>
 
         <div id="errorMessage" class="error-message"></div>
 
@@ -117,38 +147,55 @@
     </div>
 
     <script>
-        function checkKeyword() {
-            // 入力された文字を取得し、前後の空白を削除
-            const input = document.getElementById('keywordInput').value.trim();
+        function checkKeywords() {
+            // 3つの入力値を取得（余計な空白を除去）
+            const k1 = document.getElementById('keyword1').value.trim();
+            const k2 = document.getElementById('keyword2').value.trim();
+            const k3 = document.getElementById('keyword3').value.trim();
+
             const errorMessage = document.getElementById('errorMessage');
             const videoContainer = document.getElementById('videoContainer');
             const videoPlayer = document.getElementById('videoPlayer');
 
-            // 判定前のリセット処理
+            // 表示のリセット
             errorMessage.style.display = 'none';
             videoContainer.style.display = 'none';
             videoPlayer.src = "";
 
             // ====== 設定部分 ======
-            const correctAnswer = "クイズ"; // 正解のキーワード
-            const bluffAnswer = "ダミー"; // ブラフのキーワード
-            const nextUrl = "quiz_page.html"; // 正解時に移動するURL
-            // ブラフ時に流す動画のURL（例としてYouTubeの埋め込み用URL）
-            const bluffVideoUrl = "https://www.youtube.com/embed/mGduopN1dSI"; 
+            // 各入力欄の正解を設定
+            const correct1 = "りんご";
+            const correct2 = "みかん";
+            const correct3 = "ぶどう";
+
+            // ブラフの判定用ワード（どの入力欄に打たれても反応させたい場合）
+            const bluffWords = ["ダミー", "トラップ", "ひっかけ"];
+
+            // 遷移先のページ名やURL
+            const nextUrl = "quiz_page.html";
+
+            // ブラフ動画の埋め込みURL
+            const bluffVideoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
             // ======================
 
-            if (input === correctAnswer) {
-                // 正解のキーワードの場合：指定したページへ移動
+            // 入力されたワードの中にブラフが含まれているか確認
+            const containsBluff = bluffWords.includes(k1) || bluffWords.includes(k2) || bluffWords.includes(k3);
+
+            // すべて正解しているか確認
+            const isAllCorrect = (k1 === correct1) && (k2 === correct2) && (k3 === correct3);
+
+            if (isAllCorrect) {
+                // 1. 3つとも正解の場合：指定したページへ移動
                 window.location.href = nextUrl;
-                
-            } else if (input === bluffAnswer) {
-                // ブラフのキーワードの場合：動画を表示して再生
+
+            } else if (containsBluff) {
+                // 2. 1つでもブラフ用ワードが含まれている場合：動画を再生
                 videoPlayer.src = bluffVideoUrl;
                 videoContainer.style.display = 'block';
-                
+
             } else {
-                // 関係ないワードの場合：警告メッセージを表示
-                errorMessage.textContent = "入力されたキーワードが間違っています。";
+                // 3. それ以外（間違っている場合）：警告メッセージを表示
+                errorMessage.textContent = "キーワードが正しくありません。";
                 errorMessage.style.display = 'block';
             }
         }
