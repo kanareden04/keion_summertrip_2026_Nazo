@@ -109,24 +109,46 @@
             display: none;
         }
 
-        .video-container {
-            margin-top: 20px;
-            display: none;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #444;
-            position: relative;
-            padding-top: 56.25%;
-            height: 0;
-        }
-
-        .video-container iframe {
-            position: absolute;
+        /* 画面全体を覆う動画モーダル（オーバーレイ） */
+        .video-overlay {
+            display: none; /* 初期は非表示 */
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* 動画本体：画面に収まる最大サイズ */
+        .video-overlay video {
+            max-width: 95vw;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            outline: none;
+        }
+
+        /* 動画を閉じるボタン */
+        .close-btn {
+            margin-top: 16px;
+            background: #444;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 8px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+            width: auto;
+        }
+
+        .close-btn:hover {
+            background: #666;
         }
 
         @media (max-width: 480px) {
@@ -141,86 +163,95 @@
         <h1>キーワードを入力してください</h1>
         
         <div class="input-group">
-            <label for="keywordBlue" class="label-blue">青のキーワード</label>
-            <input type="text" id="keywordBlue" placeholder="青の言葉を入力" autocomplete="off">
+            <input type="text" id="keywordBlue" placeholder="！" autocomplete="off">
         </div>
 
         <div class="input-group">
-            <label for="keywordYellow" class="label-yellow">黄のキーワード</label>
-            <input type="text" id="keywordYellow" placeholder="黄の言葉を入力" autocomplete="off">
+            <input type="text" id="keywordYellow" placeholder="！" autocomplete="off">
         </div>
 
         <div class="input-group">
-            <label for="keywordRed" class="label-red">赤のキーワード</label>
-            <input type="text" id="keywordRed" placeholder="赤の言葉を入力" autocomplete="off">
+            <input type="text" id="keywordRed" placeholder="！" autocomplete="off">
         </div>
 
         <button onclick="checkKeywords()">送信</button>
 
         <div id="errorMessage" class="error-message"></div>
+    </div>
 
-        <div id="videoContainer" class="video-container">
-            <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+    <!-- 全画面動画再生用オーバーレイ -->
+    <div id="videoOverlay" class="video-overlay">
+        <!-- dummy.mp4 を指定 -->
+        <video id="bluffVideo" playsinline controls>
+            <source src="Dummy.mp4" type="video/mp4">
+            お使いのブラウザは動画再生に対応していません。
+        </video>
+        <button class="close-btn" onclick="closeVideo()">閉じる</button>
     </div>
 
     <script>
         function checkKeywords() {
-            // 空白を判定に含めるため .trim() は外してそのまま取得
             const kBlue = document.getElementById('keywordBlue').value;
             const kYellow = document.getElementById('keywordYellow').value;
             const kRed = document.getElementById('keywordRed').value;
 
             const errorMessage = document.getElementById('errorMessage');
-            const videoContainer = document.getElementById('videoContainer');
-            const videoPlayer = document.getElementById('videoPlayer');
+            const videoOverlay = document.getElementById('videoOverlay');
+            const bluffVideo = document.getElementById('bluffVideo');
 
             // 表示のリセット
             errorMessage.style.display = 'none';
-            videoContainer.style.display = 'none';
-            videoPlayer.src = "";
 
             // ====== 設定部分 ======
-            // 正解候補を配列で複数設定（ここに記載されているものはいずれも正解扱いになります）
-            const correctBlue = ["あお そら", "あお そら", "あおそら"];    // 全角空白 / 半角空白 / 空白なし
+            // 正解候補（配列）
+            const correctBlue = ["あお そら", "あお そら", "あおそら"];
             const correctYellow = ["きいろ とり", "きいろ とり", "きいろとり"];
             const correctRed = ["あか はな", "あか はな", "あかはな"];
 
-            // ブラフ候補（空白入りのパターンも登録可能）
-            const bluffWords = ["ダミー", "トラップ", "ひっかけ", "だみー ワード"];
+            // ブラフ用キーワード（配列）
+            const bluffWords = ["ダミー", "トラップ", "ひっかけ", "だみー"];
 
-            // 遷移先のURL
+            // 正解時の遷移先URL
             const nextUrl = "quiz_page.html";
-
-            // ブラフ動画の埋め込みURL
-            const bluffVideoUrl = "https://www.youtube.com/embed/mGduopN1dSI";
             // ======================
 
-            // 入力された文字が正解候補のいずれかに一致するか確認 (.includes を使用)
             const isBlueCorrect = correctBlue.includes(kBlue);
             const isYellowCorrect = correctYellow.includes(kYellow);
             const isRedCorrect = correctRed.includes(kRed);
 
-            // 3つとも正解リストに含まれているか
             const isAllCorrect = isBlueCorrect && isYellowCorrect && isRedCorrect;
-
-            // いずれかの欄にブラフワードが含まれているか
             const containsBluff = bluffWords.includes(kBlue) || bluffWords.includes(kYellow) || bluffWords.includes(kRed);
 
             if (isAllCorrect) {
-                // 正解：ページ移動
+                // 正解：指定のページへ移動
                 window.location.href = nextUrl;
 
             } else if (containsBluff) {
-                // ブラフ：動画再生
-                videoPlayer.src = bluffVideoUrl;
-                videoContainer.style.display = 'block';
+                // ブラフ：全画面オーバーレイを表示して即時再生
+                videoOverlay.style.display = 'flex';
+                bluffVideo.currentTime = 0; // 毎回最初から再生
+
+                // 動画を再生（「送信」ボタンを押したイベント直後なので音声付き再生が通りやすいです）
+                bluffVideo.play().catch(error => {
+                    // 自動再生ポリシーに引っかかった場合のフォールバック（消音にして再生）
+                    bluffVideo.muted = true;
+                    bluffVideo.play();
+                });
 
             } else {
                 // 不正解：警告表示
                 errorMessage.textContent = "キーワードが正しくありません。";
                 errorMessage.style.display = 'block';
             }
+        }
+
+        // 動画モーダルを閉じる処理
+        function closeVideo() {
+            const videoOverlay = document.getElementById('videoOverlay');
+            const bluffVideo = document.getElementById('bluffVideo');
+
+            bluffVideo.pause(); // 動画停止
+            videoOverlay.style.display = 'none'; // 非表示化
         }
     </script>
 </body>
