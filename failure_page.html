@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脱出失敗…</title>
+    <style>
+        /* 全体のスタイル（暗めの赤いグラデーション背景） */
+        body {
+            background: linear-gradient(135deg, #1c0d0d 0%, #2a1212 50%, #160808 100%);
+            color: #ece2e2;
+            font-family: 'Helvetica Neue', Arial, 'ヒラギノ角ゴ ProN', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 警告・失敗の雰囲気を出すバックグラウンド装飾 */
+        .danger-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(157, 45, 45, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 50% 80%, rgba(106, 25, 25, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* メインカードコンテナ */
+        .container {
+            background: rgba(45, 25, 25, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 48px 28px;
+            border-radius: 16px;
+            border: 2px solid #6a2d2d;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7),
+                        0 0 20px rgba(157, 45, 45, 0.25);
+            text-align: center;
+            width: 100%;
+            max-width: 480px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 「脱出失敗」タイトル（深紅のグラデーション） */
+        h1 {
+            font-size: 38px;
+            margin: 0 0 24px 0;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #d93838 50%, #9e1b1b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(217, 56, 56, 0.4);
+        }
+
+        /* 赤い区切り線 */
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #9e1b1b, #d93838, #9e1b1b, transparent);
+            border: none;
+            margin: 20px auto 28px auto;
+            width: 80%;
+        }
+
+        /* メッセージ文章 */
+        .message {
+            font-size: 17px;
+            color: #f0d8d8;
+            line-height: 1.8;
+            margin: 0;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 36px 20px; }
+            h1 { font-size: 30px; letter-spacing: 2px; }
+            .message { font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="danger-bg"></div>
+
+    <div class="container">
+        <h1>脱出失敗</h1>
+
+        <hr class="divider">
+
+        <p class="message">
+            そのようなバスは見当たりません。<br>
+            あなたは帰れなくなりました。
+        </p>
+    </div>
+
+</body>
+</html>
