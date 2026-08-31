@@ -22,7 +22,7 @@
         /* メインコンテナ */
         .container {
             background-color: #2b2b2b;
-            padding: 36px 24px;
+            padding: 36px 20px;
             border-radius: 12px;
             border: 2px solid #444;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -46,7 +46,7 @@
             background-color: #22252a;
             border: 4px solid #444950;
             border-radius: 10px;
-            padding: 20px;
+            padding: 20px 12px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0,0,0,0.3);
             margin-bottom: 24px;
             position: relative;
@@ -70,47 +70,52 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* 左側のひらがな */
         .plate-kana {
-            font-size: 32px;
+            font-size: 30px;
             font-weight: bold;
             color: #4a90e2;
             line-height: 1;
-            padding-right: 6px;
+            flex-shrink: 0; /* スマホで潰れないように保護 */
         }
 
         /* 4桁の入力欄コンテナ */
         .number-inputs {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
         /* ハイフン */
         .hyphen {
             font-size: 24px;
             font-weight: bold;
-            color: #666;
-            margin: 0 2px;
+            color: #888;
+            margin: 0 1px;
+            flex-shrink: 0;
         }
 
-        /* 独立した各桁の数字入力欄 */
+        /* ナンバープレート感のある白背景・黒文字の入力欄 */
         .num-box {
-            width: 44px;
+            width: 42px;
             height: 56px;
-            background-color: #121315;
-            border: 2px solid #555;
+            background-color: #ffffff; /* ボックスの色を白に変更 */
+            border: 2px solid #ccc;
             border-radius: 6px;
-            color: #fff;
+            color: #111111; /* 中の文字の色を黒に変更 */
             font-size: 28px;
             font-weight: bold;
             text-align: center;
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
             -moz-appearance: textfield;
+            box-sizing: border-box;
+            padding: 0;
         }
 
         .num-box::-webkit-outer-spin-button,
@@ -121,15 +126,15 @@
 
         .num-box:focus {
             border-color: #4a90e2;
-            box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
-            background-color: #181a1e;
+            box-shadow: 0 0 8px rgba(74, 144, 226, 0.6);
+            background-color: #ffffff;
         }
 
         /* 無効化（入力不可）時の見た目 */
         .num-box:disabled {
-            background-color: #222;
-            color: #666;
-            border-color: #333;
+            background-color: #e0e0e0;
+            color: #666666;
+            border-color: #aaa;
             cursor: not-allowed;
         }
 
@@ -160,7 +165,7 @@
             cursor: not-allowed;
         }
 
-        /* 警告メッセージ（消去ボタンなし） */
+        /* 警告メッセージ */
         .error-message {
             margin-top: 20px;
             padding: 12px;
@@ -172,12 +177,15 @@
             display: none;
         }
 
-        @media (max-width: 480px) {
-            .container { padding: 24px 16px; }
-            .license-plate { padding: 16px 10px; }
-            .num-box { width: 38px; height: 50px; font-size: 24px; }
-            .plate-kana { font-size: 26px; }
-            .plate-header { font-size: 18px; }
+        /* スマホ向けレスポンシブ調整 */
+        @media (max-width: 400px) {
+            .container { padding: 24px 12px; }
+            .license-plate { padding: 16px 8px; }
+            .plate-body { gap: 4px; }
+            .num-box { width: 34px; height: 48px; font-size: 22px; }
+            .plate-kana { font-size: 24px; }
+            .plate-header { font-size: 17px; gap: 10px; }
+            .hyphen { font-size: 18px; }
         }
     </style>
 </head>
@@ -213,6 +221,7 @@
         // ====== 設定部分 ======
         const correctNumber = "1234"; // 4桁の正解ナンバー
         const nextUrl = "clear_page.html"; // クリア後の遷移先URL
+        const failureUrl = "failure_page.html"; // 失敗時の遷移先URLを追加
         // ======================
 
         const inputs = [
@@ -255,16 +264,14 @@
 
             if (enteredNumber === correctNumber) {
                 // 正解：ページ移動
-                window.location.href = nextUrl;"clear_page.html"
+                window.location.href = nextUrl;
             } else {
-                // 不正解：入力欄とボタンを無効化し、閉じられないメッセージを表示
-                disableForm();
-                errorMessage.textContent = "そのナンバーのバスが見当たりません。あなたは帰れなくなりました。";
-                errorMessage.style.display = 'block';
+                // 不正解：脱出失敗ページへ移動
+                window.location.href = failureUrl;
             }
         }
 
-        // 入力欄とボタンを無効化（その場での修正を不可能にする）関数
+        // 入力欄とボタンを無効化する関数
         function disableForm() {
             inputs.forEach(input => {
                 input.disabled = true;
