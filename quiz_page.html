@@ -43,7 +43,7 @@
 
         /* ナンバープレート風プレート */
         .license-plate {
-            background-color: #f8f9fa; /* プレート全体を白色に変更 */
+            background-color: #006B3C; /* プレート全体を白色に変更 */
             border: 4px solid #d0d5dd;   /* 枠線を金属風の明度に変更 */
             border-radius: 12px;
             padding: 24px 14px 20px 14px;
@@ -60,7 +60,7 @@
             gap: 16px;
             font-size: 20px;
             font-weight: bold;
-            color: #1b4332;
+            color: #FAFAFA;
             letter-spacing: 2px;
             margin-bottom: 16px;
         }
@@ -79,7 +79,7 @@
         .plate-kana {
             font-size: 30px;
             font-weight: bold;
-            color: #1b4332;
+            color: #FAFAFA;
             line-height: 1;
             flex-shrink: 0; /* スマホで潰れないように保護 */
         }
@@ -95,7 +95,7 @@
         .hyphen {
             font-size: 24px;
             font-weight: bold;
-            color: #1b4332;
+            color: #FAFAFA;
             margin: 0 1px;
             flex-shrink: 0;
         }
@@ -104,10 +104,10 @@
         .num-box {
             width: 42px;
             height: 56px;
-            background-color: #ffffff; /* ボックスの色を白に変更 */
+            background-color: #006B3C; /* ボックスの色を白に変更 */
             border: 2px solid #ccc;
             border-radius: 6px;
-            color: #111111; /* 中の文字の色を黒に変更 */
+            color: #FAFAFA; /* 中の文字の色を黒に変更 */
             font-size: 28px;
             font-weight: bold;
             text-align: center;
@@ -196,12 +196,12 @@
 
         <div class="license-plate">
             <div class="plate-header">
-                <span>品川</span>
+                <span>岡崎</span>
                 <span>200</span>
             </div>
 
             <div class="plate-body">
-                <span class="plate-kana">さ</span>
+                <span class="plate-kana">か</span>
                 <div class="number-inputs">
                     <input type="number" class="num-box" id="digit1" min="0" max="9" pattern="\d*" inputmode="numeric" autocomplete="off">
                     <input type="number" class="num-box" id="digit2" min="0" max="9" pattern="\d*" inputmode="numeric" autocomplete="off">
@@ -219,7 +219,7 @@
 
     <script>
         // ====== 設定部分 ======
-        const correctNumber = "1234"; // 4桁の正解ナンバー
+        const correctNumber = "0643"; // 4桁の正解ナンバー
         const nextUrl = "clear_page.html"; // クリア後の遷移先URL
         const failureUrl = "failure_page.html"; // 失敗時の遷移先URLを追加
         // ======================
