@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>乗ってきたバスを呼び戻せ</title>
     <style>
-        /* 全体のスタイル（暗めの落ち着いた背景） */
         body {
             background-color: #1a1a1a;
             color: #e0e0e0;
@@ -19,7 +18,6 @@
             box-sizing: border-box;
         }
 
-        /* メインコンテナ */
         .container {
             background-color: #2b2b2b;
             padding: 36px 20px;
@@ -41,18 +39,16 @@
             color: #ffffff;
         }
 
-        /* ナンバープレート風プレート */
+        /* ナンバープレートデザイン */
         .license-plate {
-            background-color: #006B3C; /* プレート全体を白色に変更 */
-            border: 4px solid #d0d5dd;   /* 枠線を金属風の明度に変更 */
+            background-color: #006B3C;
+            border: 4px solid #d0d5dd;
             border-radius: 12px;
             padding: 24px 14px 20px 14px;
-            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1), 0 6px 16px rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2), 0 6px 16px rgba(0, 0, 0, 0.4);
             margin-bottom: 24px;
-            position: relative;
         }
 
-        /* プレート上部（地名 ＋ 分類番号） */
         .plate-header {
             display: flex;
             justify-content: center;
@@ -65,7 +61,6 @@
             margin-bottom: 16px;
         }
 
-        /* プレートメイン部分（ひらがな ＋ 4桁数字入力） */
         .plate-body {
             display: flex;
             justify-content: center;
@@ -75,70 +70,69 @@
             box-sizing: border-box;
         }
 
-        /* 左側のひらがな */
         .plate-kana {
             font-size: 30px;
             font-weight: bold;
             color: #FAFAFA;
             line-height: 1;
-            flex-shrink: 0; /* スマホで潰れないように保護 */
+            flex-shrink: 0;
         }
 
-        /* 4桁の入力欄コンテナ */
         .number-inputs {
             display: flex;
             align-items: center;
             gap: 4px;
         }
 
-        /* ハイフン */
         .hyphen {
             font-size: 24px;
             font-weight: bold;
             color: #FAFAFA;
-            margin: 0 1px;
+            margin: 0 2px;
             flex-shrink: 0;
         }
 
-        /* ナンバープレート感のある白背景・黒文字の入力欄 */
-        .num-box {
-            width: 42px;
+        /* プルダウン（select）のスタイル調整 */
+        .num-select {
+            width: 48px;
             height: 56px;
-            background-color: #006B3C; /* ボックスの色を白に変更 */
-            border: 2px solid #ccc;
+            background-color: #006B3C;
+            border: 2px solid #88ba9e;
             border-radius: 6px;
-            color: #FAFAFA; /* 中の文字の色を黒に変更 */
-            font-size: 28px;
+            color: #FAFAFA;
+            font-size: 26px;
             font-weight: bold;
             text-align: center;
+            text-align-last: center; /* 中央寄せ（Chrome/Safari） */
             outline: none;
+            cursor: pointer;
             transition: border-color 0.2s, box-shadow 0.2s;
-            -moz-appearance: textfield;
-            box-sizing: border-box;
-            padding: 0;
-        }
-
-        .num-box::-webkit-outer-spin-button,
-        .num-box::-webkit-inner-spin-button {
+            appearance: none; /* デフォルトの矢印アイコンを消去 */
             -webkit-appearance: none;
-            margin: 0;
+            -moz-appearance: none;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .num-box:focus {
-            border-color: #2d6a4f;
-            box-shadow: 0 0 8px rgba(45, 106, 79, 0.4);
-            background-color: #006B3C;
+        /* プルダウンの選択肢（展開時）の背景と文字色 */
+        .num-select option {
+            background-color: #2b2b2b;
+            color: #ffffff;
+            font-size: 18px;
         }
 
-        /* 無効化（入力不可）時の見た目 */
-        .num-box:disabled {
-            background-color: #e0e0e0;
-            color: #666666;
-            border-color: #aaa;
+        .num-select:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        .num-select:disabled {
+            background-color: #1a432b;
+            color: #888888;
+            border-color: #2d5a3f;
             cursor: not-allowed;
         }
 
-        /* 呼び戻す（送信）ボタン */
         button {
             background: linear-gradient(to bottom, #555, #444);
             color: #fff;
@@ -165,7 +159,6 @@
             cursor: not-allowed;
         }
 
-        /* 警告メッセージ */
         .error-message {
             margin-top: 20px;
             padding: 12px;
@@ -177,14 +170,13 @@
             display: none;
         }
 
-        /* スマホ向けレスポンシブ調整 */
         @media (max-width: 400px) {
             .container { padding: 24px 12px; }
             .license-plate { padding: 16px 8px; }
             .plate-body { gap: 4px; }
-            .num-box { width: 34px; height: 48px; font-size: 22px; }
+            .num-select { width: 38px; height: 48px; font-size: 20px; }
             .plate-kana { font-size: 24px; }
-            .plate-header { font-size: 17px; gap: 10px; }
+            .plate-header { font-size: 18px; gap: 12px; }
             .hyphen { font-size: 18px; }
         }
     </style>
@@ -203,11 +195,67 @@
             <div class="plate-body">
                 <span class="plate-kana">か</span>
                 <div class="number-inputs">
-                    <input type="number" class="num-box" id="digit1" min="0" max="9" pattern="\d*" inputmode="numeric" autocomplete="off">
-                    <input type="number" class="num-box" id="digit2" min="0" max="9" pattern="\d*" inputmode="numeric" autocomplete="off">
+                    <!-- 1桁目 -->
+                    <select class="num-select" id="digit1">
+                        <option value="・">・</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+
+                    <!-- 2桁目 -->
+                    <select class="num-select" id="digit2">
+                        <option value="・">・</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+
                     <span class="hyphen">-</span>
-                    <input type="number" class="num-box" id="digit3" min="0" max="9" pattern="\d*" inputmode="numeric" autocomplete="off">
-                    <input type="number" class="num-box" id="digit4" min="0" max="9" pattern="\d*" inputmode="numeric" autocomplete="off">
+
+                    <!-- 3桁目 -->
+                    <select class="num-select" id="digit3">
+                        <option value="・">・</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+
+                    <!-- 4桁目 -->
+                    <select class="num-select" id="digit4">
+                        <option value="・">・</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -219,12 +267,15 @@
 
     <script>
         // ====== 設定部分 ======
-        const correctNumber = "0643"; // 4桁の正解ナンバー
-        const nextUrl = "clear_page.html"; // クリア後の遷移先URL
-        const failureUrl = "failure_page.html"; // 失敗時の遷移先URLを追加
+        // 4文字で設定します（空欄指定には「・」を使います）
+        // 例: 「・643」や「・・43」、「1234」など
+        const correctNumber = "・643"; 
+        
+        const nextUrl = "clear_page.html";
+        const failureUrl = "failure_page.html";
         // ======================
 
-        const inputs = [
+        const selects = [
             document.getElementById('digit1'),
             document.getElementById('digit2'),
             document.getElementById('digit3'),
@@ -233,48 +284,20 @@
         const submitBtn = document.getElementById('submitBtn');
         const errorMessage = document.getElementById('errorMessage');
 
-        // 入力補助処理
-        inputs.forEach((input, index) => {
-            input.addEventListener('input', (e) => {
-                if (input.value.length > 1) {
-                    input.value = input.value.slice(-1);
-                }
-                if (input.value !== '' && index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                }
-            });
-
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && input.value === '' && index > 0) {
-                    inputs[index - 1].focus();
-                }
-            });
-        });
-
-        // 判定処理
         function checkNumber() {
-            const enteredNumber = inputs.map(input => input.value).join('');
-
-            // 4桁未満の入力チェック
-            if (enteredNumber.length < 4) {
-                errorMessage.textContent = "4桁の数字をすべて入力してください。";
-                errorMessage.style.display = 'block';
-                return;
-            }
+            // 4つの選択値を結合して確認（例: "・" + "6" + "4" + "3" => "・643"）
+            const enteredNumber = selects.map(select => select.value).join('');
 
             if (enteredNumber === correctNumber) {
-                // 正解：ページ移動
                 window.location.href = nextUrl;
             } else {
-                // 不正解：脱出失敗ページへ移動
                 window.location.href = failureUrl;
             }
         }
 
-        // 入力欄とボタンを無効化する関数
         function disableForm() {
-            inputs.forEach(input => {
-                input.disabled = true;
+            selects.forEach(select => {
+                select.disabled = true;
             });
             submitBtn.disabled = true;
         }
