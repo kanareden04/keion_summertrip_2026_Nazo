@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>乗ってきたバスを呼び戻せ</title>
+    <title>バスを呼び戻せ</title>
     <style>
         body {
             background-color: #1a1a1a;
@@ -134,6 +134,16 @@
             cursor: not-allowed;
         }
 
+        /* CSS: 注意書きのスタイル */
+　　.warning-text {
+    color: #ff6b6b;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+
         button {
             background: linear-gradient(to bottom, #555, #444);
             color: #fff;
@@ -185,7 +195,7 @@
 <body>
 
     <div class="container">
-        <h1>乗ってきたバスを呼び戻せ</h1>
+        <h1>バスを呼び戻せ</h1>
 
         <div class="license-plate">
             <div class="plate-header">
@@ -261,6 +271,7 @@
             </div>
         </div>
 
+        <div class="warning-text">※呼び出せるのは一回のみ</div>
         <button id="submitBtn" onclick="checkNumber()">呼び戻す</button>
 
         <div id="errorMessage" class="error-message"></div>
